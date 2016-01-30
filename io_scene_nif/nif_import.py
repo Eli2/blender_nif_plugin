@@ -352,14 +352,15 @@ class NifImport(NifCommon):
 
         elif isinstance(root_block, NifFormat.NiCamera):
             self.warning('Skipped NiCamera root')
-
+            b_obj = None
         elif isinstance(root_block, NifFormat.NiPhysXProp):
             self.warning('Skipped NiPhysXProp root')
-
+            b_obj = None
         else:
             self.warning(
                 "Skipped unsupported root block type '%s' (corrupted nif?)."
                 % root_block.__class__)
+            b_obj = None
 
         if hasattr(root_block, "extra_data_list"):
             for n_extra_list in root_block.extra_data_list:
@@ -372,8 +373,7 @@ class NifImport(NifCommon):
                     b_obj.niftools_bs_invmarker[0].bs_inv_zoom = n_extra_list.zoom
 
 
-
-        if self.root_ninode:
+        if b_obj and self.root_ninode:
             b_obj.niftools.rootnode = self.root_ninode
         # store bone matrix offsets for re-export
         if self.dict_bones_extra_matrix:
