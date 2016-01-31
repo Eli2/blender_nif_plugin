@@ -215,6 +215,9 @@ class NifExport(NifCommon):
                         " or 'ARMATURE' object."
                         % root_object.name)
                 root_objects.add(root_object)
+
+            #HACK Eli2 remove version checkes
+            """
             # version checking to help avoid errors
             # due to invalid settings
             for r_obj in root_objects:
@@ -234,6 +237,8 @@ class NifExport(NifCommon):
                         raise nif_utils.NifError(
                             " '%s': has mismatched nif version, user version or user version 2"
                             % r_obj_c.name)
+            """
+
             # smoothen seams of objects
             if self.properties.smooth_object_seams:
                 self.objecthelper.mesh_helper.smooth_mesh_seams(self.context.scene.objects)
