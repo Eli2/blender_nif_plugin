@@ -710,7 +710,7 @@ class ArmatureAnimation():
                         # q1.to_matrix() * q2.to_matrix() == CrossQuats(q2, q1).to_matrix()
                         quatVal = niBone_bind_quat_inv.cross(quat) # Rchannel = Rtotal * inverse(Rbind)
                         rot = extra_matrix_quat_inv.cross(quatVal).cross(extra_matrix_quat) # C' = X * C * inverse(X)
-                        b_posebone.quat = rot
+                        b_posebone.rotation_quaternion = rot
                         b_posebone.insertKey(b_armature, frame,
                                              [Blender.Object.Pose.ROT])
                         # fill optimizer dictionary
