@@ -606,7 +606,7 @@ class bound_import():
             #    *bbox.bounding_box.translation.as_list())
         b_obj.niftools.bsxflags = self.nif_import.bsxflags
         b_obj.niftools.objectflags = self.nif_import.objectflags
-        b_obj.location = mathutils.Vector((bbox.center.x,bbox.center.y,bbox.center.z))
+        b_obj.location = mathutils.Vector((bbox.translation.x,bbox.translation.y,bbox.translation.z))
 
         b_obj.niftools.nif_version = self.nif_import.hex_to_dec(self.nif_import.data._version_value_._value)
         b_obj.niftools.user_version = self.nif_import.data._user_version_value_._value
