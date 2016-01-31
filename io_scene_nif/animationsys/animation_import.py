@@ -491,7 +491,7 @@ class ArmatureAnimation():
             # Rchannel = Rtotal * inverse(Rbind)
             # Tchannel = (Ttotal - Tbind) * inverse(Rbind) / Sbind
             bone_bm = nif_utils.import_matrix(niBone) # base pose
-            niBone_bind_scale, niBone_bind_rot, niBone_bind_trans = self.decompose_srt(bone_bm)
+            niBone_bind_scale, niBone_bind_rot, niBone_bind_trans = nif_utils.decompose_srt(bone_bm)
             niBone_bind_rot_inv = mathutils.Matrix(niBone_bind_rot)
             niBone_bind_rot_inv.invert()
             niBone_bind_quat_inv = niBone_bind_rot_inv.to_quaternion()
@@ -516,7 +516,7 @@ class ArmatureAnimation():
             # SC' = SX * SC / SX = SC
             # RC' = RX * RC * inverse(RX)
             # TC' = (TX * SC * RC + TC - TX) * inverse(RX) / SX
-            extra_matrix_scale, extra_matrix_rot, extra_matrix_trans = self.decompose_srt(self.nif_import.dict_bones_extra_matrix[niBone])
+            extra_matrix_scale, extra_matrix_rot, extra_matrix_trans = nif_utils.decompose_srt(self.nif_import.dict_bones_extra_matrix[niBone])
             extra_matrix_quat = extra_matrix_rot.to_quaternion()
             extra_matrix_rot_inv = mathutils.Matrix(extra_matrix_rot)
             extra_matrix_rot_inv.invert()
