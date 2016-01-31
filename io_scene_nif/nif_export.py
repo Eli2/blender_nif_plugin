@@ -172,12 +172,15 @@ class NifExport(NifCommon):
                                             " to convert their envelopes to vertex weights,"
                                             " and turn off envelopes."
                                             % b_obj.name)
+                        #HACK Eli2 commented out
+                        """
                         if not b_armature_modifier:
                             raise nif_utils.NifError(
                                     "'%s': is parented but does not have"
                                     " the armature modifier set. This will"
                                     " cause animations to fail."
                                     % b_obj.name)
+                        """
 
                 # check for non-uniform transforms
                 # (lattices are not exported so ignore them as they often tend
