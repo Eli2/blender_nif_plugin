@@ -571,8 +571,8 @@ class ArmatureAnimation():
                         # beware, CrossQuats takes arguments in a
                         # counter-intuitive order:
                         # q1.to_matrix() * q2.to_matrix() == CrossQuats(q2, q1).to_matrix()
-                        quatVal = CrossQuats(niBone_bind_quat_inv, quat) # Rchannel = Rtotal * inverse(Rbind)
-                        rot = CrossQuats(CrossQuats(extra_matrix_quat_inv, quatVal), extra_matrix_quat) # C' = X * C * inverse(X)
+                        quatVal = mathutils.CrossQuats(niBone_bind_quat_inv, quat) # Rchannel = Rtotal * inverse(Rbind)
+                        rot = mathutils.CrossQuats(mathutils.CrossQuats(extra_matrix_quat_inv, quatVal), extra_matrix_quat) # C' = X * C * inverse(X)
                         b_posebone.quat = rot
                         b_posebone.insertKey(b_armature, frame,
                                              [Blender.Object.Pose.ROT])
@@ -687,8 +687,8 @@ class ArmatureAnimation():
                         # beware, CrossQuats takes arguments in a counter-intuitive order:
                         # q1.to_matrix() * q2.to_matrix() == CrossQuats(q2, q1).to_matrix()
 
-                        quatVal = CrossQuats(niBone_bind_quat_inv, quat) # Rchannel = Rtotal * inverse(Rbind)
-                        rot = CrossQuats(CrossQuats(extra_matrix_quat_inv, quatVal), extra_matrix_quat) # C' = X * C * inverse(X)
+                        quatVal = mathutils.CrossQuats(niBone_bind_quat_inv, quat) # Rchannel = Rtotal * inverse(Rbind)
+                        rot = mathutils.CrossQuats(mathutils.CrossQuats(extra_matrix_quat_inv, quatVal), extra_matrix_quat) # C' = X * C * inverse(X)
                         b_posebone.quat = rot
                         b_posebone.insertKey(b_armature, frame, [Blender.Object.Pose.ROT]) # this is very slow... :(
                         # fill optimizer dictionary
@@ -708,8 +708,8 @@ class ArmatureAnimation():
                         # beware, CrossQuats takes arguments in a
                         # counter-intuitive order:
                         # q1.to_matrix() * q2.to_matrix() == CrossQuats(q2, q1).to_matrix()
-                        quatVal = CrossQuats(niBone_bind_quat_inv, quat) # Rchannel = Rtotal * inverse(Rbind)
-                        rot = CrossQuats(CrossQuats(extra_matrix_quat_inv, quatVal), extra_matrix_quat) # C' = X * C * inverse(X)
+                        quatVal = niBone_bind_quat_inv.cross(quat) # Rchannel = Rtotal * inverse(Rbind)
+                        rot = extra_matrix_quat_inv.cross(quatVal).cross(extra_matrix_quat) # C' = X * C * inverse(X)
                         b_posebone.quat = rot
                         b_posebone.insertKey(b_armature, frame,
                                              [Blender.Object.Pose.ROT])

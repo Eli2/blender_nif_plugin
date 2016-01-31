@@ -280,7 +280,7 @@ class AnimationHelper():
                             rot_curve[frame] = rot_curve[frame].toQuat()
                             # beware, CrossQuats takes arguments in a counter-intuitive order:
                             # q1.to_matrix() * q2.to_matrix() == CrossQuats(q2, q1).to_matrix()
-                            rot_curve[frame] = mathutils.CrossQuats(mathutils.CrossQuats(bind_quat, rot_curve[frame]), extra_quat_inv) # inverse(RX) * RC' * RB'
+                            rot_curve[frame] = bind_quat.cross(rot_curve[frame]).cross(extra_quat_inv) # inverse(RX) * RC' * RB'
                     # pose rotation
                     elif curve in (Ipo.PO_QUATX, Ipo.PO_QUATY,
                                    Ipo.PO_QUATZ, Ipo.PO_QUATW):
@@ -291,7 +291,7 @@ class AnimationHelper():
                         rot_curve[frame].w = ipo[Ipo.PO_QUATW][frame]
                         # beware, CrossQuats takes arguments in a counter-intuitive order:
                         # q1.to_matrix() * q2.to_matrix() == CrossQuats(q2, q1).to_matrix()
-                        rot_curve[frame] = mathutils.CrossQuats(mathutils.CrossQuats(bind_quat, rot_curve[frame]), extra_quat_inv) # inverse(RX) * RC' * RB'
+                        rot_curve[frame] = bind_quat.cross(rot_curve[frame]).cross(extra_quat_inv) # inverse(RX) * RC' * RB'
                     # PO_LOCX == OB_LOCX, so this does both pose and object
                     # location
                     elif curve in (Ipo.PO_LOCX, Ipo.PO_LOCY, Ipo.PO_LOCZ):
