@@ -1020,8 +1020,7 @@ class NifExport(NifCommon):
                 # first multiply with inverse of the Blender bone matrix
                 bone_parent = b_obj.parent.data.bones[
                     bone_parent_name]
-                boneinv = mathutils.Matrix(
-                    bone_parent.matrix['ARMATURESPACE'])
+                boneinv = mathutils.Matrix(self.armaturehelper.get_bone_rest_matrix(bone_parent, 'ARMATURESPACE'))
                 boneinv.invert()
                 matrix = matrix * boneinv
                 # now multiply with the bone correction matrix X
