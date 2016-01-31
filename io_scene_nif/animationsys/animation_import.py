@@ -37,6 +37,7 @@
 #
 # ***** END LICENSE BLOCK *****
 import bpy
+import mathutils
 from pyffi.formats.nif import NifFormat
 
 from io_scene_nif.utility import nif_utils
