@@ -43,28 +43,85 @@ def loadAddon():
 
 # ======================================================================================================================
 
+def nifdiff_NiNode(expected, actual):
+    errors = []
+
+    if not isinstance(expected, actual.__class__):
+        errors.append("type mismatch expected {0} actual {1}".format(type(expected), type(actual)))
+        return errors
+
+    if isinstance(expected, NifFormat.NiTexturingProperty):
+        pass
+    elif isinstance(expected, NifFormat.NiSourceTexture):
+        pass
+    elif isinstance(expected, NifFormat.NiMaterialProperty):
+        pass
+    elif isinstance(expected, NifFormat.NiTriShape):
+        pass
+    elif isinstance(expected, NifFormat.NiTriShapeData):
+        pass
+    elif isinstance(expected, NifFormat.NiSkinInstance):
+        pass
+    elif isinstance(expected, NifFormat.NiSkinData):
+        pass
+    else:
+        if not expected.name == actual.name:
+            errors.append("name mismatch expected {0} actual {1}".format(expected.name, actual.name))
+
+        if not expected.has_bounding_box == actual.has_bounding_box:
+            errors.append("has_bounding_box mismatch expected {0} actual {1}".format(expected.has_bounding_box, actual.has_bounding_box))
+
+        if expected.has_bounding_box:
+            if not expected.bounding_box == actual.bounding_box:
+                errors.append("bounding_box mismatch expected {0} actual {1}".format(expected.bounding_box, actual.bounding_box))
+
+        if not expected.flags == actual.flags:
+            errors.append("flags mismatch expected {0} actual {1}".format(expected.flags, actual.flags))
+
+        if not expected.translation == actual.translation:
+            errors.append("translation mismatch expected {0} actual {1}".format(expected.translation, actual.translation))
+
+        if not expected.rotation == actual.rotation:
+            errors.append("rotation mismatch expected {0} actual {1}".format(expected.rotation, actual.rotation))
+
+        if not expected.scale == actual.scale:
+            errors.append("scale mismatch expected {0} actual {1}".format(expected.scale, actual.scale))
+
+        if not expected.velocity == actual.velocity:
+            errors.append("scale mismatch expected {0} actual {1}".format(expected.scale, actual.scale))
+
+    if isinstance(expected, NifFormat.NiTriShape):
+        print("foo")
+
+    return errors
+
 def niffdiff(importFile, exportFile):
-    imported = NifFormat.Data()
+    errors = []
+
+    expected = NifFormat.Data()
     with open(importFile, "rb") as stream:
-        imported.read(stream)
+        expected.read(stream)
 
-    exported = NifFormat.Data()
+    actual = NifFormat.Data()
     with open(exportFile, "rb") as stream:
-        exported.read(stream)
+        actual.read(stream)
 
-    if imported.version != exported.version:
-        raise RuntimeError("Version mismatch {0} {1}".format(imported.version, exported.version))
+    if expected.version != actual.version:
+        errors.append("Version mismatch {0} actual {1}".format(expected.version, actual.version))
 
+    if len(expected.roots) != len(actual.roots):
+        errors.append("roots size mismatch expected {0} actual {1}".format(len(expected.roots), len(actual.roots)))
 
-    if len(imported.roots) != len(exported.roots):
-        raise RuntimeError("Roots size mismatch")
+    for ir, er in zip(expected.roots, actual.roots):
+        errors.extend(nifdiff_NiNode(ir, er))
 
-    for ir, er in zip(imported.roots, exported.roots):
-        if(ir != er):
-            raise RuntimeError("Roots mismatch")
+    if not len(expected.blocks) == len(actual.blocks):
+        errors.append("blocks size mismatch {0} actual {1}".format(len(expected.blocks), len(actual.blocks)))
 
-    if imported.blocks != exported.blocks:
-        raise RuntimeError("Blocks mismatch")
+    for ir, er in zip(expected.blocks, actual.blocks):
+        errors.extend(nifdiff_NiNode(ir, er))
+
+    return errors
 
 # ======================================================================================================================
 
@@ -82,7 +139,7 @@ if __name__ == "__main__":
     loadAddon()
 
     nifFiles = problemFiles
-    nifFiles = allNifs(baseDirectory + "/meshes")
+    nifFiles = allNifs(baseDirectory + "/meshes/a")
 
     statusFile = open("test_files.txt", "w")
     exceptionsFile = open("test_exceptions.txt", "w")
@@ -127,13 +184,14 @@ if __name__ == "__main__":
         else:
             exportStatus = "Skip"
 
-        if False and importOk and exportOk:
-            try:
-                niffdiff(originalNifFile, exportFilePath)
+        if importOk and exportOk:
+            diffErrors = niffdiff(originalNifFile, exportFilePath)
+            if len(diffErrors) == 0:
                 compareStatus = "Ok"
-            except RuntimeError as e:
-                exceptionsFile.write("Exception {0}\n".format(exceptionId))
-                exceptionsFile.write(e.args[0])
+            else:
+                exceptionsFile.write("Error: {0}\n".format(exceptionId))
+                for error in diffErrors:
+                    exceptionsFile.write("%s\n" % error)
                 exceptionsFile.flush()
                 compareStatus = "Failed {0:04d}".format(exceptionId)
                 exceptionId += 1
